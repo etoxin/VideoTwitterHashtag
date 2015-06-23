@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #output{
+            width:450px;
+            float: right;
+            font-family: monospace;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="ocrad.js"></script>
+</head>
+<body>
+<h1>Video To Text Test</h1>
+<div id="output"></div>
+<video controls id="video">
+    <source src=lastweek.mp4 type=video/mp4>
+</video>
+<br/>
+<canvas id="canvas" width="720" height="404"></canvas>
+
+<br/>
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded',function(){
+
+        var video = document.getElementById("video");
+
+        var canvas = document.getElementById("canvas");
+
+        var ctx = canvas.getContext("2d");
+
+
+        video.addEventListener('play', function(){
+
+            var v = this;
+
+            var output = $("#output");
+
+            setInterval(function(){
+                ctx.drawImage(v, 0, 0, 720, 404, 0, 0, 720, 404);
+
+                var image = convertCanvasToImage(canvas);
+                var string = OCRAD(image);
+                console.log(string);
+
+                var re = /[a-zA-Z0-9]/gi;
+
+                if(re.test(string)){
+                    output.append("<p>" + string + "</p>");
+                }
+
+
+            }, 1000);
+
+
+        },false);
+
+        function convertCanvasToImage(canvas) {
+            var image = new Image();
+            image.src = canvas.toDataURL("image/png");
+            return image;
+        }
+    });
+
+
+
+
+</script>
+
+</body>
+</html>
